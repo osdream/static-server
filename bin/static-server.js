@@ -44,7 +44,7 @@ server.start(function () {
 });
 
 server.on('request', function (req, res) {
-  console.log(chalk.gray('<--'), chalk.blue('[' + req.method + ']'), req.path);
+  console.log(chalk.gray('<--'), chalk.blue('[' + req.method + ']'), req.url);
 });
 
 server.on('symbolicLink', function (link, file) {
@@ -56,14 +56,14 @@ server.on('response', function (req, res, err, file, stat) {
   var nrmFile;
 
   if (res.status >= 400) {
-    console.log(chalk.gray('-->'), chalk.red(res.status), req.path, '(' + req.elapsedTime + ')');
+    console.log(chalk.gray('-->'), chalk.red(res.status), req.url, '(' + req.elapsedTime + ')');
   } else if (file) {
     relFile = path.relative(server.rootPath, file);
     nrmFile = path.normalize(req.path.substring(1));
 
     console.log(chalk.gray('-->'), chalk.green(res.status, StaticServer.STATUS_CODES[res.status]), req.path + (nrmFile !== relFile ? (' ' + chalk.dim('(' + relFile + ')')) : ''), fsize(stat.size).human(), '(' + req.elapsedTime + ')');
   } else {
-    console.log(chalk.gray('-->'), chalk.green.dim(res.status, StaticServer.STATUS_CODES[res.status]), req.path, '(' + req.elapsedTime + ')');
+    console.log(chalk.gray('-->'), chalk.green.dim(res.status, StaticServer.STATUS_CODES[res.status]), req.url, '(' + req.elapsedTime + ')');
   }
 
   if (err && server.debug) {
